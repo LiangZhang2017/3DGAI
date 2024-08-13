@@ -2,6 +2,8 @@
 import os
 import pandas as pd
 import numpy as np
+from models.MTF.mtfRunModel import MtfRunModel
+from helper import make_dir
 
 class model_config:
 
@@ -12,7 +14,7 @@ class model_config:
         if self.args.LearningModel[0] =='MTF':
             course_str=self.args.Course[0]
             model_str=self.args.LearningModel[0]
-            features_dim_range=list(range(6,7,1)) # latent features.
+            features_dim_range=list(range(2,4,1)) # latent features.
             lambda_t=0.001 # lambda_t and lambda_q are hyper-parameters to control the weights of regularization term of T and S.
             lambda_q=0.01
             lambda_bias=0.001   # can be set as False
@@ -46,7 +48,7 @@ class model_config:
 
         pre_dict = {
             'exper_data': data,
-            'num_learner': num_learners,
+            'num_learners': num_learners,
             'num_attempts': num_attempts,
             'num_questions': num_questions
         }
@@ -54,14 +56,13 @@ class model_config:
         return pre_dict
 
     def main(self):
-        print("yes")
         pre_dict=self.preprocessing()
         learning_parameters = self.generate_paradic()
 
         if self.args.LearningModel[0] == 'MTF':
             Mtf_config={
                 'exper_data': pre_dict['exper_data'],
-                'num_learner': pre_dict['num_learner'],
+                'num_learners': pre_dict['num_learners'],
                 'num_questions': pre_dict['num_questions'],
                 'num_attempts': pre_dict['num_attempts'],
                 "features_dim_range": learning_parameters['features_dim_range'],
@@ -78,7 +79,16 @@ class model_config:
                 'is_rank':learning_parameters['is_rank']
             }
 
+            is_cross_validation = Mtf_config['is_cross_validation']
 
+            if is_cross_validation is True:
+                output_path="results/{}/{}".format(self.args.LearningModel[0],self.args.Lesson_Id[1])
+            else:
+                output_path = "results/{}/{}/{}".format('Best',self.args.LearningModel[0], self.args.Lesson_Id[1])
+
+            make_dir(os.getcwd() + '/SimLearnerModel/' + output_path)
+
+            optdim_all, optmae_all, optrmse_all, optparameters_all, train_perf = MtfRunModel(Mtf_config,output_path)
 
 
 
