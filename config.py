@@ -82,18 +82,41 @@ class model_config:
             is_cross_validation = Mtf_config['is_cross_validation']
 
             if is_cross_validation is True:
-                output_path="results/{}/{}".format(self.args.LearningModel[0],self.args.Lesson_Id[1])
+                output_path="/results/{}/{}".format(self.args.LearningModel[0],self.args.Lesson_Id[1])
             else:
-                output_path = "results/{}/{}/{}".format('Best',self.args.LearningModel[0], self.args.Lesson_Id[1])
+                output_path = "/results/{}/{}/{}".format('Best',self.args.LearningModel[0], self.args.Lesson_Id[1])
 
-            make_dir(os.getcwd() + '/SimLearnerModel/' + output_path)
+            make_dir(os.getcwd() + output_path)
 
             optdim_all, optmae_all, optrmse_all, optparameters_all, train_perf = MtfRunModel(Mtf_config,output_path)
 
+            if is_cross_validation is True:
+                result_output_path = os.getcwd() + "/results/{}/{}/{}_result.txt".format(
+                    self.args.LearningModel[0], self.args.Lesson_Id[1], self.args.LearningModel[0])
+            else:
+                result_output_path = os.getcwd() + "/results/{}/{}/{}_{}_result.txt".format(
+                    'Best', self.args.LearningModel[0], self.args.Lesson_Id[1], self.args.LearningModel[0])
 
+            f = open(result_output_path, "w+")
+            f.write("{}{}".format('num_learner: ', pre_dict['num_learners']))
+            f.write("\n")
+            f.write("{}{}".format('num_attempts: ', pre_dict['num_attempts']))
+            f.write("\n")
+            f.write("{}{}".format('num_questions: ', pre_dict['num_questions']))
+            f.write("\n")
+            f.write("{}{}".format('parameters: ', self.generate_paradic()))
+            f.write("\n")
+            f.write("{}{}".format('The dimensions of features: ', optdim_all))
+            f.write("\n")
+            f.write("{}{}".format('MAE results: ', optmae_all))
+            f.write("\n")
+            f.write("{}{}".format('MAE average: ', sum(np.array(optmae_all)) / Mtf_config['cvfold']))
+            f.write("\n")
+            f.write("{}{}".format('RMSE results: ', optrmse_all))
+            f.write("\n")
+            f.write("{}{}".format('RMSE average: ', sum(np.array(optrmse_all)) / Mtf_config['cvfold']))
+            f.write("\n")
+            f.write("{}{}".format('All Parameter tensor results: ', optparameters_all))
 
-
-
-
-
-
+            f.write("\n")
+            f.close()
