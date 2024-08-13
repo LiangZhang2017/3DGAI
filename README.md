@@ -2,6 +2,9 @@
 
 This is the code for the research work on "A Framework for Using Generative AI for Handling Sparse Learner Performance Data From Intelligent Tutoring Systems."
 
+## Stage 1:
+Do the 3-dimensional tensor for the learning performance data by learners, questions and attempts. 
+
 ## Citation
 
 If you use this code or research in your work, please cite the following paper:

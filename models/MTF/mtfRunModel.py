@@ -49,8 +49,6 @@ def MtfRunModel(model_config,output_path):
                 train_data = exper_data.loc[exper_data['Student_Id'].isin(studentIds[train])].to_numpy()
                 test_data = exper_data.loc[exper_data['Student_Id'].isin(studentIds[test])].to_numpy()
 
-                print("exper_data headers is {}".format(exper_data))
-
                 model_config['train_data'] = train_data
                 model_config['test_data'] = test_data
 
@@ -68,6 +66,7 @@ def MtfRunModel(model_config,output_path):
 
                     test_perf = model.testing(test_data)
                     print("Result about the test_perf")
+                    print("test_perf is {}".format(test_perf))
 
                     dim_rec.append(features_dim)
                     correc_rec.append(test_perf['rmse'])

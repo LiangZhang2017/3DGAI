@@ -56,11 +56,6 @@ class MTF(object):
         :return: predicted value of tensor T[learner, attempt, question]
         """
 
-        print(f"learner is {learner}")
-        print(f"attempt is {attempt}")
-        print(f"question is {question}")
-        print(self.V.shape)
-
         pred=np.dot(self.U[learner,:],self.V[:,attempt,question]) #vector*vector
 
         if self.use_bias_t:
@@ -102,7 +97,6 @@ class MTF(object):
 
         q_mae = mean_absolute_error(train_obs, train_pred)
 
-
         print("####################")
 
         reg_U=LA.norm(self.U)**2   # Frobenius norm, 2-norm
@@ -122,12 +116,7 @@ class MTF(object):
 
         trans_V=np.transpose(self.V, (1, 0, 2))
 
-        print("U.shape is {}".format(self.U.shape))
-        print("V.shape is {}".format(trans_V.shape))
-
         pred_tensor = np.dot(self.U, trans_V) #learner*attempt*question
-
-        print("pred_tensor.shape is {}".format(pred_tensor.shape))
 
         sum_n=0.
         if self.is_rank is True:
@@ -354,11 +343,9 @@ class MTF(object):
                 loss_list.append(loss)
                 self.lr*=0.5
                 iter_num+=1
-                print("The iter_num is: "+str(iter_num))
             else:
                 loss_list.append(loss)
                 iter_num+=1
-                print("The iter_num is: " + str(iter_num))
 
         self.U=best_U
         self.V=best_V
