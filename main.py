@@ -1,7 +1,9 @@
 
 import argparse
 from config import model_config
-
+'''
+Start one example dataset
+'''
 class KCModel:
     def __init__(self):
         parser = argparse.ArgumentParser(description='Arguments Parameters Inputs')
